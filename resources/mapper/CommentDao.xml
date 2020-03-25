@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmy.dao.ICommentDao">
+	<resultMap type="com.zmy.entity.Comment" id="commentResultMap">
+		<id column="comment_id" property="commentId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="last_edit_time" property="lastEditTime"/>
+		<result column="comments" property="comments"/>
+		<association property="userProductMap" column="user_product_id"
+		javaType="com.zmy.entity.UserProductMap">
+			<id column="user_product_id" property="userProductId"/>
+			<result column="comment_state" property="commentState"/>
+		</association>
+	</resultMap>
+	<!-- 店家评论列表 -->
+	<resultMap type="com.zmy.entity.Comment" id="commentResultMapByShopId">
+		<id column="comment_id" property="commentId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="last_edit_time" property="lastEditTime"/>
+		<result column="comments" property="comments"/>
+		<association property="userProductMap" column="user_product_id"
+		javaType="com.zmy.entity.UserProductMap">
+			<id column="user_product_id" property="userProductId"/>
+			<result column="comment_state" property="commentState"/>
+		</association>
+	</resultMap>
+	
+	<select id="queryCommentByOrderId" resultMap="commentResultMap">
+		SELECT
+		c.comment_id,
+		c.create_time,
+		c.last_edit_time,
+		c.comments,
+		upm.user_product_id,
+		upm.comment_state
+		from
+		tb_comment c,
+		tb_user_product_map upm
+		WHERE
+		c.user_product_map_id = upm.user_product_id
+		and
+		c.user_product_map_id = #{orderId}
+	</select>
+	
+	<select id="queryCommentByShopAndProduct" resultMap="commentResultMap">
+		SELECT
+		c.comment_id,
+		c.create_time,
+		c.last_edit_time,
+		c.comments,
+		upm.user_product_id,
+		upm.comment_state
+		from
+		tb_comment c,
+		tb_user_product_map upm,
+		tb_product p
+		WHERE
+		c.user_product_map_id = upm.user_product_id
+		and
+		p.product_id = upm.product_id
+		and
+		upm.product_id = #{product.productId}
+	</select>
+	<!-- 根据店铺返回所有商品评论 -->
+	<select id="queryCommentListByShopId" resultMap="commentResultMapByShopId">
+		SELECT
+		c.comment_id,
+		c.create_time,
+		c.last_edit_time,
+		c.comments,
+		upm.user_product_id,
+		upm.comment_state,
+		p.img_addr,
+		p.product_name,
+		p.promotion_price
+		from
+		tb_comment c,
+		tb_user_product_map upm,
+		tb_product p
+		<where>
+			<if test="shop != null and shop.shopId != null">
+				and upm.shop_id = #{shop.shopId}
+			</if>
+			<if test="product != null and product.productName != null">
+				and p.product_name like '%${product.productName}%'
+			</if>
+		</where>
+		and
+		p.product_id = upm.product_id
+	</select>
+	
+	
+	<insert id="insertComment" useGeneratedKeys="true"  
+	 keyColumn="comment_id" keyProperty="commentId"  >
+	
+		INSERT INTO	
+		tb_comment(user_product_map_id,create_time,comments)
+		VALUES
+		(
+			#{userProductMap.userProductId},
+			 #{createTime},
+			 #{comments} 
+		)
+	</insert>
+	
+	<update id="updateCommentByOrderId" parameterType="com.zmy.entity.Comment">
+		UPDATE tb_comment
+		<set>
+			<if test="comments != null">comments=#{comments},</if>
+			<if test="lastEditTime != null">last_edit_time=#{lastEditTime}</if>
+		</set>
+		WHERE user_product_map_id = #{userProductMap.userProductId}
+	</update>
+</mapper>

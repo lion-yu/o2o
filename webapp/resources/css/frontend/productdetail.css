@@ -1,0 +1,24 @@
+
+
+.list-product-info{
+	margin-top: 0px;
+}
+
+#promotion-price{
+	color: #f40;
+	font-size:20px
+}
+
+#normal-price{
+	text-decoration:line-through;
+}
+
+.demo-card-header-pic{
+	margin : 0
+}
+.card-cover{
+	height : 350px
+}
+.detail-color{
+	color : #f40
+}

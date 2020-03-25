@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>河北科技大学校园商城</title>
+<meta name="description"
+	content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="stylesheet"
+	href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+<link rel="stylesheet"
+	href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+</head>
+<body>
+	<div class="page-group">
+		<div id="page-tab" class="page">
+			<header class="bar bar-nav">
+				<a class="button button-link button-nav pull-left back"
+					href="/demos/tabs"> <span class="icon icon-left"></span> 返回
+				</a>
+				<h1 class="title">订单列表</h1>
+			</header>
+			<div class="content">
+				<div class="searchbar">
+					<a class="searchbar-cancel">取消</a>
+					<div class="search-input">
+						<label class="icon icon-search" for="search"></label> <input
+							type="search" id='search' placeholder='输入商品名...' />
+					</div>
+				</div>
+				<div class="buttons-tab">
+					<a href="#tab1" class="tab-link active button">全部</a> <a
+						href="#tab2" class="tab-link button">待评价</a> <a href="#tab3"
+						class="tab-link button">已评价</a>
+				</div>
+
+				<div class="tabs">
+					<div id="tab1" class="tab active">
+						<div class="content-block">
+							<div class="tabs">
+								<div class='tab active' id='tab1-1'></div>
+							</div>
+						</div>
+					</div>
+					<div id="tab2" class="tab">
+						<div class="content-block">
+							<div id="waitcomment-wrap">
+							<!-- 待评价记录填充处 -->
+							</div>
+						</div>
+					</div>
+					<div id="tab3" class="tab">
+						<div class="content-block">
+							<div id="commented">
+							<!-- 已评价记录填充处 -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<script type='text/javascript'
+		src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+	<script type='text/javascript'
+		src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+	<script type='text/javascript'
+		src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+	<script type='text/javascript'
+		src='../resources/js/shop/commentlist.js' charset='utf-8'></script>
+</body>
+</html>

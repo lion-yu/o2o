@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>修改密码</title>
+<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+<link rel="../resources/css/common/common.css">
+<body>
+	<div class="page-group">
+		<div id="page-label-input" class="page">
+			<header class="bar bar-nav">
+				<h1 class="title">修改密码</h1>
+			</header>
+			<div class="content">
+				<div class="list-block">
+					<ul>
+						<!-- 用户名 text -->
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">用户名</div>
+									<div class="item-input">
+										<input type="text" id="user-name" placeholder="用户名">
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- 密码 text -->
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">原密码</div>
+									<div class="item-input">
+										<input type="password" id="password" placeholder="原密码">
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- 新密码 text -->
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">新密码</div>
+									<div class="item-input">
+										<input type="password" id="newPassword" placeholder="新密码">
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- 确认新密码 text -->
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">确认新密码</div>
+									<div class="item-input">
+										<input type="password" id="confirmPassword" placeholder="确认新密码">
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- 验证码 keptcha 避免重复提交 -->
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">验证码</div>
+									<input type="text" id="j_captcha" placeholder="验证码">
+									<div class="item-input">
+										<img id="captcha_img" alt="点击跟换" title="点击更换"
+											onclick="changeVerifyCode(this)" src="../Kaptcha">
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="content-block">
+					<div class="row">
+						<div class="col-50">
+							<a href="#" class="button button-big button-fill button-danger" id="back">返回登录</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button button-big button-fill button-success"
+								id="submit">提交</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type='text/javascript'
+		src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+	<script type='text/javascript'
+		src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+	<script type='text/javascript'
+		src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+		
+	<script type="text/javascript" src="../resources/js/common/common.js"
+		charset="utf-8">
+	</script>
+	<script type="text/javascript" src="../resources/js/local/changpsw.js" charset="utf-8"></script>
+
+</body>
+</html>

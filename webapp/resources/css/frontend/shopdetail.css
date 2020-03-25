@@ -1,0 +1,14 @@
+.card-cover{
+	height : 200px
+}
+.item-inner .promotion-price{
+	color: #f40;
+	font-size:20px
+}
+
+.normal-price{
+	text-decoration:line-through;
+}
+.addbutton{
+	position: relative;
+}

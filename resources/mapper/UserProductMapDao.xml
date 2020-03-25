@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmy.dao.IUserProductMapDao">
+	<resultMap type="com.zmy.entity.UserProductMap"
+		id="userProductResultMap">
+		<id column="user_product_id" property="userProductId" />
+		<result column="create_time" property="createTime" />
+		<result column="point" property="point" />
+		<result column="comment_state" property="commentState" />
+		<association property="user" column="user_id"
+			javaType="com.zmy.entity.PersonInfo">
+			<id column="user_id" property="userId" />
+			<result column="name" property="name" />
+		</association>
+		<association property="product" column="product_id"
+			javaType="com.zmy.entity.Product">
+			<id column="product_id" property="productId" />
+			<result column="product_name" property="productName" />
+			<result column="img_addr" property="imgAddr"/>
+			<result column="promotion_price" property="promotionPrice"/>
+			<result column="product_desc" property="productDesc"/>
+		</association>
+		<association property="shop" column="shop_id"
+			javaType="com.zmy.entity.Shop">
+			<id column="shop_id" property="shopId" />
+			<result column="shop_name" property="shopName" />
+		</association>
+		<association property="operator" column="operator_id"
+			javaType="com.zmy.entity.PersonInfo">
+			<id column="operator_id" property="userId" />
+			<result column="operator_name" property="name" />
+		</association>
+	</resultMap>
+	<!-- 用户身份查询历史订单 -->
+	<resultMap type="com.zmy.entity.UserProductMap"
+		id="userProductMapByUser">
+		<id column="user_product_id" property="userProductId" />
+		<result column="create_time" property="createTime" />
+		<result column="point" property="point" />
+		<result column="comment_state" property="commentState" />
+		<association property="product" column="product_id"
+			javaType="com.zmy.entity.Product">
+			<id column="product_id" property="productId" />
+			<result column="product_name" property="productName" />
+			<result column="img_addr" property="imgAddr" />
+			<result column="promotion_price" property="promotionPrice" />
+		</association>
+		<association property="shop" column="shop_id"
+			javaType="com.zmy.entity.Shop">
+			<id column="shop_id" property="shopId" />
+			<result column="shop_name" property="shopName" />
+		</association>
+	</resultMap>
+	<select id="queryUserProductMapListByUser"
+		resultMap="userProductMapByUser">
+		SELECT
+		upm.user_product_id,
+		upm.create_time,
+		upm.point,
+		upm.comment_state,
+		p.product_id,
+		p.product_name,
+		p.img_addr,
+		p.promotion_price,
+		s.shop_id,
+		s.shop_name
+		FROM
+		tb_user_product_map upm,
+		tb_product p,
+		tb_shop s
+		<where>
+		upm.product_id = p.product_id
+		and
+		upm.shop_id = s.shop_id
+		and upm.user_id= #{userProductMap.user.userId}
+		<if test="userProductMap.product  != null  and  userProductMap.product.productName != null">
+			and p.product_name LIKE '%${userProductMap.product.productName}%'
+		</if>
+		</where>
+		ORDER BY upm.create_time desc
+		LIMIT
+		#{rowIndex},#{pageSize}
+	</select>
+	<select id="queryUserProductMapListByUserCount" resultType="int">
+		SELECT
+		count(1)
+		FROM
+		tb_user_product_map upm,
+		tb_product p,
+		tb_shop s
+		<where>
+		upm.product_id = p.product_id
+		and
+		upm.shop_id = s.shop_id
+		and upm.user_id= #{user.userId}
+		<if test="product  != null  and  product.productName != null">
+			and p.product_name LIKE '%${product.productName}%'
+		</if>
+		</where>
+	</select>
+	
+	<select id="queryUserProductMapList"
+		resultMap="userProductResultMap">
+		SELECT
+		upm.user_product_id,
+		upm.create_time,
+		upm.point,
+		upm.comment_state,
+		buyer.user_id,
+		buyer.name,
+		s.shop_id,
+		s.shop_name,
+		p.product_id,
+		p.product_name,
+		p.img_addr,
+		p.promotion_price,
+		p.product_desc,
+		operator.user_id AS operator_id,
+		operator.name As operator_name
+		FROM
+		tb_user_product_map
+		upm,
+		tb_person_inf buyer,
+		tb_shop s,
+		tb_product p,
+		tb_person_inf operator
+		<where>
+			upm.user_id = buyer.user_id
+			and
+			upm.shop_id = s.shop_id
+			and
+			upm.product_id
+			= p.product_id
+			and
+			upm.operator_id = operator.user_id
+			<!-- 按顾客信息精确查询 -->
+			<if
+				test="userProductCondition.user != null 
+			and userProductCondition.user.userId != null">
+				and upm.user_id = #{userProductCondition.user.userId}
+			</if>
+			<!-- 按某个店铺精确查询 -->
+			<if
+				test="userProductCondition.shop != null 
+			and userProductCondition.shop.shopId != null">
+				and upm.shop_id = #{userProductCondition.shop.shopId}
+			</if>
+			<!-- 按照是否评价状态查询 -->
+			<if test="userProductCondition != null and userProductCondition.commentState != null">
+				and upm.comment_state = #{userProductCondition.commentState}
+			</if>
+			<!-- 按顾客名字模糊查询 -->
+			<if
+				test="userProductCondition.user != null 
+			and userProductCondition.user.name != null">
+				and buyer.name like '%${userProductCondition.user.name}%'
+			</if>
+			<!-- 按商品名模糊查询 -->
+			<if
+				test="userProductCondition.product != null 
+			and userProductCondition.product.productName != null">
+				and p.product_name like
+				'%${userProductCondition.product.productName}%'
+			</if>
+			<!-- 按消费日期范围查询 -->
+			<if test="userProductCondition.createTime != null">
+				and upm.create_time = #{userProductCondition.createTime}
+			</if>
+		</where>
+		ORDER BY upm.create_time DESC
+		LIMIT #{rowIndex},#{pageSize};
+	</select>
+	<!-- 通过prouduct_id查询商品的同销量 -->
+	<select id="queryUserProductMapByProductId" resultType="long">
+		SELECT
+		count(1)
+		FROM
+		tb_user_product_map
+		
+		WHERE
+		product_id = #{productId}
+	</select>
+	
+	<select id="queryUserProductMapCount" resultType="int">
+		SELECT
+		count(1)
+		FROM
+		tb_user_product_map
+		upm,
+		tb_person_inf buyer,
+		tb_shop
+		s,
+		tb_product p,
+		tb_person_inf operator
+		<where>
+			upm.user_id = buyer.user_id
+			and
+			upm.shop_id = s.shop_id
+			and
+			upm.product_id
+			= p.product_id
+			and
+			upm.operator_id = operator.user_id
+			<!-- 按顾客信息精确查询 -->
+			<if test="user != null and user.userId != null">
+				and upm.user_id = #{user.userId}
+			</if>
+			<!-- 按某个店铺精确查询 -->
+			<if test="shop != null  and shop.shopId != null">
+				and upm.shop_id = #{shop.shopId}
+			</if>
+			<!-- 按顾客名字模糊查询 -->
+			<if test="user != null  and user.name != null">
+				and buyer.name like '%${user.name}%'
+			</if>
+			<!-- 按照是否评价状态查询 -->          
+			<if test="commentState != null">
+				and upm.comment_state = #{commentState}
+			</if>
+			<!-- 按商品名模糊查询 -->
+			<if test="product != null  and product.productName != null">
+				and p.product_name like '%${product.productName}%'
+			</if>
+			<!-- 按消费日期范围查询 -->
+			<if test="createTime != null">
+				and upm.create_time = #{createTime}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertUserProductMap"
+		parameterType="com.zmy.entity.UserProductMap" useGeneratedKeys="true"
+		keyColumn="user_product_id" keyProperty="userProductId">
+		INSERT INTO
+		tb_user_product_map(user_id,product_id,shop_id,operator_id,
+		create_time,point)
+		VALUES(#{user.userId},#{product.productId},#{shop.shopId},#{operator.userId},
+		#{createTime},#{product.point})
+	</insert>
+
+	<update id="updateUserProductMap"
+		parameterType="com.zmy.entity.UserProductMap">
+		UPDATE tb_user_product_map
+		<set>
+			<if test="commentState != null">comment_state=#{commentState}</if>
+		</set>
+		WHERE user_product_id = #{userProductId}
+	</update>
+</mapper>

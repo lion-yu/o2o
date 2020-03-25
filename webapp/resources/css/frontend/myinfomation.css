@@ -1,0 +1,14 @@
+#personifo-card {
+	margin : 0;
+	background-color: #0894ec;
+	box-shadow: 0 0 0 0
+}
+#message-info {
+	box-shadow: 0 0 0 0
+}
+#order{
+	box-shadow: 0 0 0 0
+}
+card a{
+	font-size:10px
+}

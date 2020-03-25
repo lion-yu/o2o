@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>河北科技大学商城</title>
+<link rel="stylesheet"
+	href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+<link rel="stylesheet"
+	href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+<link rel="stylesheet" href="../resources/css/shop/shoplist.css">
+<style type="text/css">
+.card {
+	background: #d8cdcd
+}
+</style>
+</head>
+<body>
+	<div class="page-group">
+		<div id="page-grid" class="page">
+			<header class="bar bar-nav">
+				<a class="button button-link button-nav pull-left" external
+					href="/o2o/frontend/index"> <span
+					class="icon icon-left"></span> 首页
+				</a>
+				<h1 class="title">商铺列表</h1>
+			</header>
+			<div class="content">
+				<div class="content-block">
+					<p>
+						<span id="currentHour"></span> <a class="pull-right"
+							href="/o2o/shopadmin/shopoperation" external>注册店铺</a>
+					</p>
+					<!-- 商家用户信息 -->
+					<div class="card">
+						<div class="card-content">
+							<div class="list-block media-list">
+								<ul>
+									<li class="item-content">
+										<div class="item-media">
+											<img id="user-profileimg" width="150">
+										</div>
+										<div class="item-inner">
+											<div class="item-title-row">
+												<div id="user-name" class="item-title"></div>
+											</div>
+											<div id="create-time" class="item-subtitle"></div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="row row-shop">
+						<div class="col-40">商店名称</div>
+						<div class="col-40">状态</div>
+						<div class="col-20">操作</div>
+					</div>
+					<div class="shop-wrap">
+					
+					</div>
+				</div>
+				<div class="content-block">
+					<div class="row">
+						<div class="col-33">
+							<a id="bind" class="button button-big button-fill button-danger">账号绑定</a>
+						</div>
+						<div class="col-33">
+							<a href="/o2o/local/logouthtml" external
+								class="button button-big button-fill button-success">退出系统</a>
+						</div>
+						<div class="col-33">
+							<a id="bindAndChange"
+								class="button button-big button-fill button button-fill">修改密码</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script type='text/javascript'
+				src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+			<script type='text/javascript'
+				src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+			<script type='text/javascript'
+				src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'
+				charset='utf-8'></script>
+
+			<script type='text/javascript' src='../resources/js/common/common.js'
+				charset='utf-8'></script>
+			<script type="text/javascript" src="../resources/js/shop/shoplist.js"></script>
+</body>
+</html>

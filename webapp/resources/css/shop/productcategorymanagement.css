@@ -1,0 +1,22 @@
+.row-product-category{
+	border: 3px solid #ddd;
+	padding: .8rem;
+	border-bottom: none;
+}
+
+.row-product-category:last-child{
+	border-bottom: 3px solid #4cd964;
+}
+
+.row{
+	margin-left : 0
+}
+.category-input{
+	border: none;
+	background-color: #eee;
+}
+
+.product-category-name{
+	white-space: nowrap;
+	overflow-x:scroll;
+}

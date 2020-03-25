@@ -1,0 +1,10 @@
+.item-input  input{
+		width: 100px;
+        height: 40px;
+        background-color: #FFF;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        -ms-filter: 'alpha(opacity=0)'
+}

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmy.dao.IProductDao">
+	<!-- 返回集定义 -->
+	<resultMap type="com.zmy.entity.Product" id="productMap">
+		<id column="product_id" property="productId" />
+		<result column="product_name" property="productName" />
+		<result column="product_desc" property="productDesc" />
+		<result column="img_addr" property="imgAddr" />
+		<result column="normal_price" property="normalPrice" />
+		<result column="promotion_price" property="promotionPrice" />
+		<result column="priority" property="priority" />
+		<result column="create_time" property="createTime" />
+		<result column="last_edit_time" property="lastEditTime" />
+		<result column="enable_status" property="enableStatus" />
+		<result column="point" property="point" />
+		<association property="productCategory"
+			javaType="com.zmy.entity.ProductCategory"
+			column="product_category_id">
+			<id column="product_category_id" property="productCategoryId" />
+			<result column="product_category_name"
+				property="productCategoryName" />
+		</association>
+		<association property="shop"
+			javaType="com.zmy.entity.Shop" column="shop_id">
+			<id column="shop_id" property="shopId" />
+			<result column="shop_name" property="shopName" />
+			<result column="owner_id" property="ownerId" />
+		</association>
+		<collection property="productImgList" column="product_id"
+			ofType="com.zmy.entity.ProductImg">
+			<id column="product_img_id" property="productImgId" />
+			<result column="img_addr" property="imgAddr" />
+			<result column="img_desc" property="imgDesc" />
+			<result column="priority" property="priority" />
+			<result column="create_time" property="createTime" />
+			<result column="product_id" property="productId" />
+		</collection>
+	</resultMap>
+
+	<insert id="insertProduct"
+		parameterType="com.zmy.entity.Product" useGeneratedKeys="true"
+		keyProperty="productId" keyColumn="product_id">
+		INSERT INTO
+		tb_product(product_name,product_desc,img_addr,normal_price,promotion_price,priority,create_time,last_edit_time,enable_status,point,product_category_id,shop_id)
+		VALUES
+		(#{productName},#{productDesc},#{imgAddr},#{normalPrice},#{promotionPrice},
+		#{priority},#{createTime},#{lastEditTime},#{point},#{enableStatus},#{point},#{productCategory.productCategoryId},
+		#{shop.shopId})
+	</insert>
+
+	<update id="updateProductCategoryToNull" parameterType="Long">
+		UPDATE
+		tb_product
+		SET
+		product_category_id = null
+		WHERE product_category_id =
+		#{productCategoryId}
+	</update>
+
+	<update id="updateProduct"
+		parameterType="com.zmy.entity.Product">
+		UPDATE tb_product
+		<set>
+			<if test="productName != null">product_name=#{productName},</if>
+			<if test="productDesc != null">product_desc=#{productDesc},</if>
+			<if test="imgAddr != null">img_addr=#{imgAddr},</if>
+			<if test="normalPrice != null">normal_price=#{normalPrice},</if>
+			<if test="promotionPrice != null">promotion_price=#{promotionPrice},</if>
+			<if test="priority != null">priority=#{priority},</if>
+			<if test="createTime != null">create_time=#{createTime},</if>
+			<if test="lastEditTime != null">last_edit_time=#{lastEditTime},</if>
+			<if test="enableStatus != null">enable_status=#{enableStatus},</if>
+			<if test="point != null">point=#{point},</if>
+			<if
+				test="productCategory != null and productCategory.productCategoryId != null">
+				product_category_id=#{productCategory.productCategoryId}
+			</if>
+		</set>
+		WHERE product_id=#{productId}
+		AND
+		shop_id =#{shop.shopId}
+	</update>
+
+	<select id="queryProductCount" resultType="int">
+		SELECT count(1) FROM tb_product
+		<where>
+			<if test="productCondition.productName != null">
+				AND product_name like
+				'%${productCondition.productName}%'
+			</if>
+			<if test="productCondition.enableStatus != null">
+				AND enable_status=#{productCondition.enableStatus}
+			</if>
+			<if
+				test="productCondition.shop != null and productCondition.shop.shopId != null">
+				AND shop_id=#{productCondition.shop.shopId}
+			</if>
+			<if
+				test="productCondition.productCategory != null and productCondition.productCategory.productCategoryId != null">
+				and product_category_id =
+				#{productCondition.productCategory.productCategoryId}
+			</if>
+		</where>
+	</select>
+	<!-- 首页输入商品名查询商品列表 -->
+	<resultMap type="com.zmy.entity.Product" id="productMap2">
+		<id column="product_id" property="productId"/>
+		<result column="product_name" property="productName"/>
+		<result column="img_addr" property="imgAddr"/>
+		<result column="promotion_price" property="promotionPrice"/>
+		<result column="last_edit_time" property="lastEditTime"/>
+		<result column="product_desc" property="productDesc"/>
+		<association property="shop" javaType="com.zmy.entity.Shop" column="shop_id">
+			<id column="shop_id" property="shopId" />
+			<result column="shop_name" property="shopName" />
+		</association>
+	</resultMap>
+	<select id="queryProductListByName" resultMap="productMap2"> 
+		SELECT
+		p.product_id,
+		p.product_name,
+		p.img_addr,
+		p.promotion_price,
+		p.product_desc,
+		p.last_edit_time,
+		s.shop_id,
+		s.shop_name
+		FROM tb_product p
+		LEFT JOIN	
+		tb_shop s
+		ON
+		p.shop_id=s.shop_id
+		WHERE
+		p.product_name like '%${productName}%'
+		ORDER BY p.priority DESC
+		LIMIT #{rowIndex},#{pageSize}
+	</select>
+	<select id="queryProductList"
+		resultType="com.zmy.entity.Product">
+		SELECT
+		product_id,
+		product_name,
+		product_desc,
+		img_addr,
+		normal_price,
+		promotion_price,
+		priority,
+		create_time,
+		last_edit_time,
+		enable_status,
+		point,
+		product_category_id,
+		shop_id
+		FROM tb_product
+		<where>
+			<if test="productCondition.productName != null">
+				AND product_name like
+				'%${productCondition.productName}%'
+			</if>
+			<if test="productCondition.enableStatus != null">
+				AND enable_status=#{productCondition.enableStatus}
+			</if>
+			<if
+				test="productCondition.shop != null and productCondition.shop.shopId != null">
+				AND shop_id=#{productCondition.shop.shopId}
+			</if>
+			<if
+				test="productCondition.productCategory != null and productCondition.productCategory.productCategoryId != null">
+				and product_category_id =
+				#{productCondition.productCategory.productCategoryId}
+			</if>
+		</where>
+		ORDER BY priority DESC
+		LIMIT #{rowIndex},#{pageSize}
+	</select>
+
+	<select id="queryProductById" parameterType="Long"
+		resultMap="productMap">
+		SELECT
+		p.product_id,
+		p.product_name,
+		p.product_desc,
+		p.img_addr,
+		p.normal_price,
+		p.promotion_price,
+		p.priority,
+		p.create_time,
+		p.last_edit_time,
+		p.enable_status,
+		p.point,
+		p.product_category_id,
+		p.shop_id,
+		pm.product_img_id,
+		pm.img_addr AS detail_img,
+		pm.img_desc,
+		pm.priority,
+		pm.create_time
+		FROM tb_product p
+		LEFT JOIN
+		tb_product_img pm
+		ON
+		p.product_id=pm.product_id
+		WHERE
+		p.product_id =
+		#{productId}
+		ORDER BY
+		pm.priority DESC
+	</select>
+</mapper>
